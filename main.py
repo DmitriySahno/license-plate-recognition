@@ -1,40 +1,14 @@
-import re
 import cv2
-import easyocr
 from paddleocr import PaddleOCR
-
-# from cv2 import dnn_superres
-
 from ultralytics import YOLO
 import numpy as np
-# from realesrgan import RealESRGANer
-# from basicsr.archs.rrdbnet_arch import RRDBNet
-import torch
 from utils import Utils
 
 
 # init models
 coco_model = YOLO("models/yolo11s.pt")
 license_plate_model = YOLO("logs/retrain/weights/best.pt")
-# ocr = easyocr.Reader(["en"], gpu=torch.cuda.is_available())
 ocr = PaddleOCR(use_angle_cls=True, lang="en")
-
-# model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64,
-#                 num_block=23, num_grow_ch=32, scale=4)
-
-# upscale_model = RealESRGANer(
-#     scale=4,
-#     model_path='models/RealESRGAN_x4plus.pth',
-#     model=model,
-#     tile=0,
-#     tile_pad=10,
-#     pre_pad=0,
-#     half=False
-# )
-
-# upscale_model = cv2.dnn_superres.DnnSuperResImpl_create()
-# upscale_model.readModel("models/ESPCN_x3.pb")
-# upscale_model.setModel("espcn", 3)
 
 utils = Utils(license_plate_model, coco_model, ocr, None)
 
