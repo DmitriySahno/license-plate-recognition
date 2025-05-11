@@ -12,6 +12,9 @@ Currently uses detection area for recognition the target of camera
 - Video processing with overlays for detected objects.
 - Video demonstration is in output path
 
+## License Plate Dataset
+- License plate detector was trained on roboflow [dataset](https://universe.roboflow.com/augmented-startups/vehicle-registration-plates-trudk) 
+
 ## Installation
 1. Clone the repository:
    ```bash
