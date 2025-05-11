@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from datetime import datetime
 
 VEHICLES = [2, 3, 5, 7]     # COCO classification {2: 'car', 3: 'motorcycle', 5: 'bus', 7: 'truck'}
 LICENSE_PLATE_PATTERN = "AAANNNNA"
@@ -44,6 +45,11 @@ class Utils:
 
     def normalize_license_number(self, text):
         result = ""
+        
+        if len(text) != len(LICENSE_PLATE_PATTERN):
+            print(f"Invalid license plate number: {text}")
+            return None
+        
         for idx, char in enumerate(text):
             if idx < len(LICENSE_PLATE_PATTERN):
                 if LICENSE_PLATE_PATTERN[idx] == 'A' and char.isdigit():
@@ -57,21 +63,30 @@ class Utils:
         
         return result.upper()
     
-    def extract_license_plate_number(self, img, use_upsample=False):
+    def extract_license_plate_number(self, img):
         if img is None:
             print("No image provided for license plate number extraction.")
             return None
         
         print("Extracting license plate number...")
-        if use_upsample and self.upscale_model:
-            img = self.upscale_model.predict(img)[0]
-        
-        result = self.ocr.ocr(img, cls=True)
+        try:
+            result = self.ocr.ocr(np.array(img), cls=True)
+        except Exception as e:
+            print(f"Error during OCR: {e}")
+            return None
+            
         if result is None or len(result) == 0 or result[0] is None:
             print("No text detected.")
             return None
         
         text = "".join([item[1][0] for sublist in result for item in sublist])
-        print(f"License plate: {text}")
+        print(f"License plate: {text}, ocr result: {result}")
         result = self.normalize_license_number(text)
         return result
+    
+    def draw_license_plate_number(self, license_plate_number, frame, position):
+        text_size, _ = cv2.getTextSize(license_plate_number, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
+        text_w, text_h = text_size
+        x, y = position
+        cv2.rectangle(frame, (x, y), (x + text_w, y + text_h), (0, 0, 0), -1)
+        cv2.putText(frame, license_plate_number, (x, text_h), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
