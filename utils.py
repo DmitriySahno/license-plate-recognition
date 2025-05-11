@@ -4,10 +4,7 @@ import numpy as np
 VEHICLES = [2, 3, 5, 7]     # COCO classification {2: 'car', 3: 'motorcycle', 5: 'bus', 7: 'truck'}
 LICENSE_PLATE_PATTERN = "AAANNNNA"
 
-char_to_digit = {
-    'O': '0', 'I': '1', 'L': '1', 'Z': '2', 'E': '3', 'A': '4',
-    'S': '5', 'G': '6', 'T': '7', 'B': '8', 'P': '9'
-}
+char_to_digit = {'O': '0', 'I': '1', 'L': '1', 'Z': '2', 'E': '3', 'A': '4', 'S': '5', 'G': '6', 'T': '7', 'B': '8', 'P': '9'}
 
 digit_to_char = {v: k for k, v in char_to_digit.items()}
 
