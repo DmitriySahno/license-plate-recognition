@@ -21,19 +21,19 @@ detecting_area = (width//4, height//4, width*3//4, height*3//4)
 overlay = np.zeros((height, width, 3), dtype=np.uint8)
 cv2.rectangle(overlay, (detecting_area[0], detecting_area[1]), (detecting_area[2], detecting_area[3]), (0, 255, 0), -1)
 
-tracker = Sort()
+tracker = Sort(max_age=10, min_hits=3, iou_threshold=0.3)
 
 tracked_objs = []
 tracked_ids = []
-license_plate_number = ""
+license_plate_number = None
 
-each_nth_frame = 3
+each_nth_frame = 1
 frame_number = -1
 while True:
     frame_number += 1
     ret, frame = video.read()
     
-    # each 5th frame
+    # each nth frame
     if (frame_number % each_nth_frame != 0):
         continue
     
@@ -60,7 +60,7 @@ while True:
     if set(new_ids) != set(tracked_ids) or len(tracked_ids) > 0 and license_plate_number is None:
         tracked_ids = new_ids
         print("Detecting IDs: ", tracked_ids)
-        license_plate_number = ""
+        license_plate_number = None
         
         for vehicle in tracked_objs:
             print("Vehicle detected: ", vehicle)
